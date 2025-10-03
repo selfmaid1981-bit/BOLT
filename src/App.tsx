@@ -1,5 +1,4 @@
-import { Sparkles, CheckCircle, Clock, Shield, Phone, Mail, MapPin, Home, Building2, Key, Package, GraduationCap } from 'lucide-react';
-import QuoteCalculator from './components/QuoteCalculator';
+import { Sparkles, CheckCircle, Clock, Shield, Phone, Mail, MapPin } from 'lucide-react';
 
 function App() {
   return (
@@ -14,10 +13,9 @@ function App() {
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <a href="#services" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Services</a>
-              <a href="#quote" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Get Quote</a>
               <a href="#why-us" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Why Us</a>
               <a href="#contact" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Contact</a>
-              <a href="#quote" className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors font-medium shadow-lg shadow-emerald-600/30">Book Now</a>
+              <a href="#contact" className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors font-medium shadow-lg shadow-emerald-600/30">Book Now</a>
             </div>
           </div>
         </div>
@@ -36,7 +34,7 @@ function App() {
                 Professional cleaning services that transform your space. We handle the mess, so you can focus on what matters most.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <a href="#quote" className="bg-emerald-600 text-white px-8 py-4 rounded-lg hover:bg-emerald-700 transition-all font-semibold text-lg shadow-xl shadow-emerald-600/30 hover:shadow-2xl hover:shadow-emerald-600/40 hover:-translate-y-0.5">Get a Free Quote</a>
+                <a href="#contact" className="bg-emerald-600 text-white px-8 py-4 rounded-lg hover:bg-emerald-700 transition-all font-semibold text-lg shadow-xl shadow-emerald-600/30 hover:shadow-2xl hover:shadow-emerald-600/40 hover:-translate-y-0.5">Get a Free Quote</a>
                 <a href="#services" className="border-2 border-emerald-600 text-emerald-600 px-8 py-4 rounded-lg hover:bg-emerald-50 transition-colors font-semibold text-lg">Our Services</a>
               </div>
             </div>
@@ -58,12 +56,12 @@ function App() {
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Our Services</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">Comprehensive cleaning solutions tailored to your needs</p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             <div className="group bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-emerald-600 transition-all hover:shadow-xl hover:-translate-y-1">
               <div className="w-16 h-16 bg-emerald-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                <Home className="w-8 h-8 text-emerald-600 group-hover:text-white transition-colors" />
+                <Sparkles className="w-8 h-8 text-emerald-600 group-hover:text-white transition-colors" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Residential</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Regular Cleaning</h3>
               <p className="text-gray-600 leading-relaxed mb-4">Keep your home consistently fresh with our scheduled cleaning services. Perfect for busy households.</p>
               <ul className="space-y-2 text-gray-600">
                 <li className="flex items-start">
@@ -83,73 +81,29 @@ function App() {
 
             <div className="group bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-emerald-600 transition-all hover:shadow-xl hover:-translate-y-1">
               <div className="w-16 h-16 bg-teal-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                <Building2 className="w-8 h-8 text-teal-600 group-hover:text-white transition-colors" />
+                <Shield className="w-8 h-8 text-teal-600 group-hover:text-white transition-colors" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Commercial & Office</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">Professional cleaning for offices, retail spaces, and commercial properties.</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Deep Cleaning</h3>
+              <p className="text-gray-600 leading-relaxed mb-4">Intensive cleaning that reaches every corner. Ideal for seasonal refreshes or move-in/move-out situations.</p>
               <ul className="space-y-2 text-gray-600">
                 <li className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Common areas and workspaces</span>
+                  <span>Detailed appliance cleaning</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Restrooms and break rooms</span>
+                  <span>Baseboard and trim wiping</span>
                 </li>
                 <li className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Trash removal and sanitation</span>
+                  <span>Cabinet and window cleaning</span>
                 </li>
               </ul>
             </div>
 
             <div className="group bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-emerald-600 transition-all hover:shadow-xl hover:-translate-y-1">
               <div className="w-16 h-16 bg-emerald-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                <Key className="w-8 h-8 text-emerald-600 group-hover:text-white transition-colors" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Airbnb & Short-Term Rental</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">Fast turnaround cleaning to keep your rental guest-ready.</p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Quick turnovers between guests</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Linen change and restocking</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Quality inspection</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="group bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-emerald-600 transition-all hover:shadow-xl hover:-translate-y-1">
-              <div className="w-16 h-16 bg-teal-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                <GraduationCap className="w-8 h-8 text-teal-600 group-hover:text-white transition-colors" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Apartments & Student Housing</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">Specialized turnover cleaning for apartments and student housing.</p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Move-out deep cleaning</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Make-ready services</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Inspection-ready standards</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="group bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-emerald-600 transition-all hover:shadow-xl hover:-translate-y-1">
-              <div className="w-16 h-16 bg-emerald-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                <Package className="w-8 h-8 text-emerald-600 group-hover:text-white transition-colors" />
+                <Clock className="w-8 h-8 text-emerald-600 group-hover:text-white transition-colors" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Move In/Out</h3>
               <p className="text-gray-600 leading-relaxed mb-4">Make transitions smooth with our comprehensive move-in or move-out cleaning services.</p>
@@ -168,39 +122,12 @@ function App() {
                 </li>
               </ul>
             </div>
-
-            <div className="group bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-emerald-600 transition-all hover:shadow-xl hover:-translate-y-1">
-              <div className="w-16 h-16 bg-teal-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                <Sparkles className="w-8 h-8 text-teal-600 group-hover:text-white transition-colors" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Deep Cleaning Services</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">Intensive cleaning that reaches every corner. Ideal for seasonal refreshes.</p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Detailed appliance cleaning</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Baseboard and trim wiping</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Cabinet and window cleaning</span>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Quote Calculator Section */}
-      <section id="quote" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-emerald-50 via-white to-teal-50">
-        <QuoteCalculator />
-      </section>
-
       {/* Why Choose Us Section */}
-      <section id="why-us" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="why-us" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-emerald-50 via-white to-teal-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Why Choose Self Maid?</h2>
