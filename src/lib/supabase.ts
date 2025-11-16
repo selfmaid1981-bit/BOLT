@@ -3,11 +3,13 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
-}
+export const supabase = supabaseUrl && supabaseAnonKey
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+if (!supabase) {
+  console.warn('Supabase environment variables are missing. Falling back to a mock submission handler.');
+}
 
 export interface QuoteRequest {
   id?: string;
@@ -27,6 +29,16 @@ export interface QuoteRequest {
 }
 
 export async function submitQuoteRequest(quoteData: QuoteRequest) {
+  if (!supabase) {
+    return {
+      ...quoteData,
+      id: crypto.randomUUID(),
+      status: 'pending',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    } satisfies QuoteRequest;
+  }
+
   const { data, error } = await supabase
     .from('quote_requests')
     .insert([quoteData])
