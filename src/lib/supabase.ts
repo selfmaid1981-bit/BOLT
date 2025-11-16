@@ -1,13 +1,29 @@
 import { createClient } from '@supabase/supabase-js';
 
+export class SupabaseConfigurationError extends Error {
+  constructor() {
+    super('Missing Supabase environment variables');
+    this.name = 'SupabaseConfigurationError';
+  }
+}
+
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
+const hasSupabaseConfig = Boolean(supabaseUrl && supabaseAnonKey);
+
+if (!hasSupabaseConfig) {
+  console.warn(
+    'Supabase environment variables are not configured. Quote requests will not be submitted.'
+  );
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabaseClient = hasSupabaseConfig
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
+
+export const supabase = supabaseClient;
+export const isSupabaseConfigured = hasSupabaseConfig;
 
 export interface QuoteRequest {
   id?: string;
@@ -27,7 +43,11 @@ export interface QuoteRequest {
 }
 
 export async function submitQuoteRequest(quoteData: QuoteRequest) {
-  const { data, error } = await supabase
+  if (!supabaseClient) {
+    throw new SupabaseConfigurationError();
+  }
+
+  const { data, error } = await supabaseClient
     .from('quote_requests')
     .insert([quoteData])
     .select()
