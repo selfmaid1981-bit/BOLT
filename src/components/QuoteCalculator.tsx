@@ -170,6 +170,7 @@ export default function QuoteCalculator() {
   };
 
   const estimatedPrice = calculatePrice();
+  const selectedFrequency = frequencies.find(f => f.id === formData.frequency);
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -357,9 +358,9 @@ export default function QuoteCalculator() {
                 <div className="text-sm font-semibold text-gray-600 mb-2">Estimated Price</div>
                 <div className="text-5xl font-bold text-emerald-600 mb-2">${estimatedPrice}</div>
                 <div className="text-sm text-gray-600">
-                  {frequencies.find(f => f.id === formData.frequency)?.discount > 0 && (
+                  {selectedFrequency && selectedFrequency.discount > 0 && (
                     <span className="text-emerald-600 font-semibold">
-                      Discount applied for {frequencies.find(f => f.id === formData.frequency)?.name.toLowerCase()} service
+                      Discount applied for {selectedFrequency.name.toLowerCase()} service
                     </span>
                   )}
                 </div>
