@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { Calculator, Home, Building2, Key, Sparkles, Package, GraduationCap } from 'lucide-react';
-import { submitQuoteRequest } from '../lib/supabase';
+import {
+  SupabaseConfigurationError,
+  isSupabaseConfigured,
+  submitQuoteRequest,
+} from '../lib/supabase';
 
 interface QuoteFormData {
   serviceType: string;
@@ -61,6 +65,7 @@ export default function QuoteCalculator() {
   const [showQuote, setShowQuote] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const isSupabaseAvailable = isSupabaseConfigured;
 
   const calculatePrice = () => {
     if (!formData.serviceType || !formData.propertySize || !formData.frequency) {
@@ -127,7 +132,13 @@ export default function QuoteCalculator() {
       setShowQuote(true);
     } catch (error) {
       console.error('Error submitting quote:', error);
-      setSubmitError('Failed to submit quote request. Please try again.');
+      if (error instanceof SupabaseConfigurationError) {
+        setSubmitError(
+          'Online quote requests are currently unavailable. Please contact us via phone or email to book your service.'
+        );
+      } else {
+        setSubmitError('Failed to submit quote request. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -364,11 +375,24 @@ export default function QuoteCalculator() {
             </div>
           )}
 
+          {/* Supabase Disabled Notice */}
+          {!isSupabaseAvailable && !submitError && (
+            <div className="bg-amber-50 border-2 border-amber-200 text-amber-800 p-4 rounded-lg">
+              Online quote requests are temporarily unavailable. Please call or email us to schedule your cleaning service.
+            </div>
+          )}
+
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               type="submit"
-              disabled={!formData.serviceType || !formData.propertySize || !formData.frequency || isSubmitting}
+              disabled={
+                !formData.serviceType ||
+                !formData.propertySize ||
+                !formData.frequency ||
+                isSubmitting ||
+                !isSupabaseAvailable
+              }
               className="flex-1 bg-emerald-600 text-white px-8 py-4 rounded-lg hover:bg-emerald-700 transition-all font-semibold text-lg shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-emerald-600"
             >
               {isSubmitting ? 'Submitting...' : 'Request Quote'}
