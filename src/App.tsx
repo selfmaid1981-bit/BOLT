@@ -1,5 +1,6 @@
 import { Sparkles, CheckCircle, Clock, Shield, Phone, Mail, MapPin, Home, Building2, Key, Package, GraduationCap } from 'lucide-react';
 import QuoteCalculator from './components/QuoteCalculator';
+import ShareableChecklist from './components/ShareableChecklist';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <div className="hidden md:flex items-center space-x-8">
               <a href="#services" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Services</a>
               <a href="#quote" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Get Quote</a>
+              <a href="#checklist" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Checklist</a>
               <a href="#why-us" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Why Us</a>
               <a href="#contact" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Contact</a>
               <a href="#quote" className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors font-medium shadow-lg shadow-emerald-600/30">Book Now</a>
@@ -197,6 +199,19 @@ function App() {
       {/* Quote Calculator Section */}
       <section id="quote" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-emerald-50 via-white to-teal-50">
         <QuoteCalculator />
+      </section>
+
+      {/* Shareable Checklist Section */}
+      <section id="checklist" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Cleaning Checklist to Share</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Download, copy, or send our ready-made cleaning checklist to teammates, tenants, or property partners in seconds.
+            </p>
+          </div>
+          <ShareableChecklist />
+        </div>
       </section>
 
       {/* Why Choose Us Section */}
