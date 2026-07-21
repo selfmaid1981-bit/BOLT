@@ -1,362 +1,181 @@
-import { Sparkles, CheckCircle, Clock, Shield, Phone, Mail, MapPin, Home, Building2, Key, Package, GraduationCap } from 'lucide-react';
-import QuoteCalculator from './components/QuoteCalculator';
-import ShareableChecklist from './components/ShareableChecklist';
+import { useMemo, useState } from 'react';
+import {
+  ArrowRight,
+  BarChart3,
+  Bell,
+  Bot,
+  BrainCircuit,
+  Building2,
+  ChevronDown,
+  HelpCircle,
+  FileText,
+  FolderKanban,
+  LayoutDashboard,
+  Lightbulb,
+  Megaphone,
+  Menu,
+  MessageSquareText,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Settings,
+  Sparkles,
+  Target,
+  Users,
+  Wand2,
+  X,
+  Zap,
+} from 'lucide-react';
+
+const brains = [
+  { name: 'Marketing Brain', description: 'Campaigns, content & growth', icon: Megaphone, color: 'violet', activity: '12 min ago' },
+  { name: 'Sales Brain', description: 'Proposals, scripts & follow-up', icon: Target, color: 'blue', activity: '1 hr ago' },
+  { name: 'Operations Brain', description: 'SOPs, systems & quality', icon: Settings, color: 'amber', activity: 'Yesterday' },
+  { name: 'Training Brain', description: 'Onboarding & team development', icon: Users, color: 'emerald', activity: '2 days ago' },
+];
+
+const campaigns = [
+  { title: 'Summer Deep Clean', status: 'Generating', meta: '24 assets • Self-Maid', progress: 68, color: '#7457e8' },
+  { title: 'Student Turnover 2026', status: 'Draft', meta: '12 assets • Self-Maid', progress: 34, color: '#dc9e32' },
+  { title: 'Q3 Brand Awareness', status: 'Live', meta: '36 assets • PlayHard', progress: 100, color: '#23966c' },
+];
 
 function App() {
+  const [business, setBusiness] = useState('Self-Maid');
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [prompt, setPrompt] = useState('');
+  const [notice, setNotice] = useState('');
+  const today = useMemo(() => new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date()), []);
+
+  const runAction = (message: string) => {
+    setNotice(message);
+    window.setTimeout(() => setNotice(''), 2600);
+  };
+
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-sm z-50 border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="w-8 h-8 text-emerald-600" />
-              <span className="text-2xl font-bold text-gray-900">Self Maid</span>
-            </div>
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#services" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Services</a>
-              <a href="#quote" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Get Quote</a>
-              <a href="#checklist" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Checklist</a>
-              <a href="#why-us" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Why Us</a>
-              <a href="#contact" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Contact</a>
-              <a href="#quote" className="bg-emerald-600 text-white px-6 py-3 rounded-lg hover:bg-emerald-700 transition-colors font-medium shadow-lg shadow-emerald-600/30">Book Now</a>
-            </div>
+    <div className="app-shell">
+      <aside className={`sidebar ${mobileOpen ? 'open' : ''}`}>
+        <div className="brand">
+          <div className="brand-mark"><Sparkles size={20} /></div>
+          <span>CommonGround<span>AI</span></span>
+          <button className="mobile-close" onClick={() => setMobileOpen(false)} aria-label="Close menu"><X size={20} /></button>
+        </div>
+
+        <button className="business-switcher" onClick={() => setBusiness(business === 'Self-Maid' ? 'PlayHard' : 'Self-Maid')}>
+          <span className="business-avatar">SM</span>
+          <span><small>WORKSPACE</small><strong>{business}</strong></span>
+          <ChevronDown size={16} />
+        </button>
+
+        <nav className="side-nav">
+          <p>OVERVIEW</p>
+          <a className="active" href="#dashboard"><LayoutDashboard /> Dashboard</a>
+          <a href="#activity"><Zap /> Activity</a>
+          <p>AI WORKSPACE</p>
+          <a href="#brains"><BrainCircuit /> AI Brains <span className="nav-count">5</span></a>
+          <a href="#knowledge"><FolderKanban /> Knowledge Base</a>
+          <a href="#prompts"><MessageSquareText /> Prompt Library</a>
+          <p>PRODUCTION</p>
+          <a href="#campaigns"><Megaphone /> Campaigns</a>
+          <a href="#assets"><FileText /> Asset Library</a>
+          <a href="#analytics"><BarChart3 /> Analytics</a>
+        </nav>
+
+        <div className="sidebar-bottom">
+          <a href="#help"><HelpCircle /> Help & resources</a>
+          <a href="#settings"><Settings /> Settings</a>
+          <div className="profile-card">
+            <span className="profile-avatar">DM</span>
+            <span><strong>De'Andre Moore</strong><small>Administrator</small></span>
+            <MoreHorizontal size={18} />
           </div>
         </div>
-      </nav>
+      </aside>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-emerald-50 via-white to-teal-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      <main>
+        <header className="topbar">
+          <button className="menu-btn" onClick={() => setMobileOpen(true)} aria-label="Open menu"><Menu /></button>
+          <div className="search"><Search size={18} /><input aria-label="Search" placeholder="Search anything..." /><kbd>⌘ K</kbd></div>
+          <div className="top-actions">
+            <button className="icon-button" aria-label="Notifications"><Bell size={20} /><i /></button>
+            <button className="create-button" onClick={() => runAction('New workspace item ready to create')}><Plus size={18} /> Create new <ChevronDown size={15} /></button>
+          </div>
+        </header>
+
+        <div className="content" id="dashboard">
+          <section className="welcome-row">
             <div>
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                Your Home,
-                <span className="text-emerald-600 block">Spotlessly Clean</span>
-              </h1>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Professional cleaning services that transform your space. We handle the mess, so you can focus on what matters most.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <a href="#quote" className="bg-emerald-600 text-white px-8 py-4 rounded-lg hover:bg-emerald-700 transition-all font-semibold text-lg shadow-xl shadow-emerald-600/30 hover:shadow-2xl hover:shadow-emerald-600/40 hover:-translate-y-0.5">Get a Free Quote</a>
-                <a href="#services" className="border-2 border-emerald-600 text-emerald-600 px-8 py-4 rounded-lg hover:bg-emerald-50 transition-colors font-semibold text-lg">Our Services</a>
-              </div>
+              <p>{today}</p>
+              <h1>Good morning, De'Andre <span>👋🏾</span></h1>
+              <h2>Your AI workforce is ready. What are we building today?</h2>
             </div>
-            <div className="relative">
-              <div className="aspect-square rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 shadow-2xl rotate-3 transform">
-                <div className="absolute inset-0 rounded-2xl bg-white flex items-center justify-center -rotate-3 shadow-2xl">
-                  <Sparkles className="w-48 h-48 text-emerald-600" strokeWidth={1.5} />
-                </div>
-              </div>
+            <div className="system-status"><span /> All systems operational</div>
+          </section>
+
+          <section className="command-card">
+            <div className="command-icon"><Wand2 /></div>
+            <div className="command-copy">
+              <strong>Ask your AI workforce</strong>
+              <span>Turn an idea into a complete business deliverable.</span>
             </div>
+            <div className="prompt-box">
+              <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="e.g. Build a summer deep cleaning campaign for busy families in Auburn..." />
+              <button onClick={() => { if (prompt.trim()) { runAction('Your AI workforce is building it now'); setPrompt(''); } }} aria-label="Submit prompt"><ArrowRight /></button>
+            </div>
+            <div className="prompt-suggestions">
+              <span>Try asking:</span>
+              {['Create a campaign', 'Write a proposal', 'Build an SOP'].map(item => <button key={item} onClick={() => setPrompt(item)}>{item}</button>)}
+            </div>
+          </section>
+
+          <section id="brains">
+            <div className="section-heading">
+              <div><h3>Your AI Brains</h3><p>Specialized intelligence, trained on your business.</p></div>
+              <button onClick={() => runAction('Opening all AI Brains')}>View all brains <ArrowRight size={16} /></button>
+            </div>
+            <div className="brain-grid">
+              {brains.map(({ name, description, icon: Icon, color, activity }) => (
+                <article className="brain-card" key={name}>
+                  <div className={`brain-icon ${color}`}><Icon /></div>
+                  <button className="more" aria-label={`More options for ${name}`}><MoreHorizontal /></button>
+                  <h4>{name}</h4><p>{description}</p>
+                  <div className="brain-footer"><span><i /> Ready</span><small>{activity}</small><button onClick={() => runAction(`${name} is ready for your prompt`)}><ArrowRight /></button></div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <div className="lower-grid">
+            <section className="campaign-panel" id="campaigns">
+              <div className="section-heading"><div><h3>Active Campaigns</h3><p>Production moving across your businesses.</p></div><button>View all <ArrowRight size={16} /></button></div>
+              <div className="campaign-list">
+                {campaigns.map(c => <div className="campaign" key={c.title}>
+                  <div className="campaign-symbol" style={{ background: `${c.color}16`, color: c.color }}><Megaphone /></div>
+                  <div className="campaign-info"><strong>{c.title}</strong><span>{c.meta}</span><div className="progress"><i style={{ width: `${c.progress}%`, background: c.color }} /></div></div>
+                  <span className={`status ${c.status.toLowerCase()}`}>{c.status === 'Generating' && <i />}{c.status}</span>
+                  <button className="more"><MoreHorizontal /></button>
+                </div>)}
+              </div>
+            </section>
+
+            <aside className="insight-card">
+              <div className="insight-top"><span><Lightbulb /></span><small>AI INSIGHT</small></div>
+              <h3>Your summer campaign is outperforming</h3>
+              <p>“Summer Deep Clean” is seeing <strong>32% higher engagement</strong> than your campaign average.</p>
+              <button onClick={() => runAction('Opening campaign insights')}>View insight <ArrowRight /></button>
+              <div className="insight-orb"><Bot /></div>
+            </aside>
           </div>
+
+          <section className="stats-grid" id="analytics">
+            <article><span className="stat-icon purple"><FileText /></span><div><small>Knowledge items</small><strong>248</strong><em>+18 this month</em></div></article>
+            <article><span className="stat-icon blue"><MessageSquareText /></span><div><small>AI generations</small><strong>1,284</strong><em>+24% vs last month</em></div></article>
+            <article><span className="stat-icon green"><Building2 /></span><div><small>Businesses connected</small><strong>3</strong><em>All active</em></div></article>
+          </section>
         </div>
-      </section>
-
-      {/* Services Section */}
-      <section id="services" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Our Services</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">Comprehensive cleaning solutions tailored to your needs</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="group bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-emerald-600 transition-all hover:shadow-xl hover:-translate-y-1">
-              <div className="w-16 h-16 bg-emerald-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                <Home className="w-8 h-8 text-emerald-600 group-hover:text-white transition-colors" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Residential</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">Keep your home consistently fresh with our scheduled cleaning services. Perfect for busy households.</p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Dusting and vacuuming</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Bathroom and kitchen cleaning</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Floor mopping and maintenance</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="group bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-emerald-600 transition-all hover:shadow-xl hover:-translate-y-1">
-              <div className="w-16 h-16 bg-teal-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                <Building2 className="w-8 h-8 text-teal-600 group-hover:text-white transition-colors" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Commercial & Office</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">Professional cleaning for offices, retail spaces, and commercial properties.</p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Common areas and workspaces</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Restrooms and break rooms</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Trash removal and sanitation</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="group bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-emerald-600 transition-all hover:shadow-xl hover:-translate-y-1">
-              <div className="w-16 h-16 bg-emerald-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                <Key className="w-8 h-8 text-emerald-600 group-hover:text-white transition-colors" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Airbnb & Short-Term Rental</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">Fast turnaround cleaning to keep your rental guest-ready.</p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Quick turnovers between guests</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Linen change and restocking</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Quality inspection</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="group bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-emerald-600 transition-all hover:shadow-xl hover:-translate-y-1">
-              <div className="w-16 h-16 bg-teal-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                <GraduationCap className="w-8 h-8 text-teal-600 group-hover:text-white transition-colors" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Apartments & Student Housing</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">Specialized turnover cleaning for apartments and student housing.</p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Move-out deep cleaning</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Make-ready services</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Inspection-ready standards</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="group bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-emerald-600 transition-all hover:shadow-xl hover:-translate-y-1">
-              <div className="w-16 h-16 bg-emerald-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                <Package className="w-8 h-8 text-emerald-600 group-hover:text-white transition-colors" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Move In/Out</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">Make transitions smooth with our comprehensive move-in or move-out cleaning services.</p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Complete property cleaning</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Closet and storage areas</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Final inspection ready</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="group bg-white p-8 rounded-2xl border-2 border-gray-100 hover:border-emerald-600 transition-all hover:shadow-xl hover:-translate-y-1">
-              <div className="w-16 h-16 bg-teal-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                <Sparkles className="w-8 h-8 text-teal-600 group-hover:text-white transition-colors" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Deep Cleaning Services</h3>
-              <p className="text-gray-600 leading-relaxed mb-4">Intensive cleaning that reaches every corner. Ideal for seasonal refreshes.</p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Detailed appliance cleaning</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Baseboard and trim wiping</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircle className="w-5 h-5 text-emerald-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Cabinet and window cleaning</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Quote Calculator Section */}
-      <section id="quote" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-emerald-50 via-white to-teal-50">
-        <QuoteCalculator />
-      </section>
-
-      {/* Shareable Checklist Section */}
-      <section id="checklist" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Cleaning Checklist to Share</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Download, copy, or send our ready-made cleaning checklist to teammates, tenants, or property partners in seconds.
-            </p>
-          </div>
-          <ShareableChecklist />
-        </div>
-      </section>
-
-      {/* Why Choose Us Section */}
-      <section id="why-us" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Why Choose Self Maid?</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">We're committed to excellence in every clean</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-20 h-20 bg-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-600/30">
-                <Shield className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Trusted Professionals</h3>
-              <p className="text-gray-600 leading-relaxed">Background-checked, trained staff you can trust in your home</p>
-            </div>
-            <div className="text-center">
-              <div className="w-20 h-20 bg-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-teal-600/30">
-                <Sparkles className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Eco-Friendly Products</h3>
-              <p className="text-gray-600 leading-relaxed">Safe, green cleaning solutions for your family and pets</p>
-            </div>
-            <div className="text-center">
-              <div className="w-20 h-20 bg-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-emerald-600/30">
-                <Clock className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Flexible Scheduling</h3>
-              <p className="text-gray-600 leading-relaxed">Book services that fit your schedule, not the other way around</p>
-            </div>
-            <div className="text-center">
-              <div className="w-20 h-20 bg-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-teal-600/30">
-                <CheckCircle className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Satisfaction Guaranteed</h3>
-              <p className="text-gray-600 leading-relaxed">Not happy? We'll make it right, no questions asked</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Ready for a Cleaner Home?</h2>
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Get in touch today for a free quote. We'll customize a cleaning plan that perfectly fits your needs and budget.
-              </p>
-              <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-6 h-6 text-emerald-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-                    <a href="tel:+1234567890" className="text-gray-600 hover:text-emerald-600 transition-colors">(123) 456-7890</a>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-6 h-6 text-emerald-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-                    <a href="mailto:hello@selfmaid.com" className="text-gray-600 hover:text-emerald-600 transition-colors">hello@selfmaid.com</a>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-6 h-6 text-emerald-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Service Area</h3>
-                    <p className="text-gray-600">Serving the Greater Metro Area</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-emerald-50 to-teal-50 p-8 rounded-2xl border-2 border-emerald-100">
-              <form className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-2">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-emerald-600 focus:outline-none transition-colors"
-                    placeholder="Your name"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-emerald-600 focus:outline-none transition-colors"
-                    placeholder="your@email.com"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-semibold text-gray-900 mb-2">Phone</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-emerald-600 focus:outline-none transition-colors"
-                    placeholder="(123) 456-7890"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="message" className="block text-sm font-semibold text-gray-900 mb-2">Message</label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-emerald-600 focus:outline-none transition-colors resize-none"
-                    placeholder="Tell us about your cleaning needs..."
-                  ></textarea>
-                </div>
-                <button
-                  type="submit"
-                  className="w-full bg-emerald-600 text-white px-8 py-4 rounded-lg hover:bg-emerald-700 transition-all font-semibold shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 hover:-translate-y-0.5"
-                >
-                  Get Free Quote
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <Sparkles className="w-8 h-8 text-emerald-400" />
-              <span className="text-2xl font-bold">Self Maid</span>
-            </div>
-            <p className="text-gray-400">
-              © 2025 Self Maid. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      </main>
+      {mobileOpen && <button className="scrim" aria-label="Close menu" onClick={() => setMobileOpen(false)} />}
+      {notice && <div className="toast"><Sparkles size={17} />{notice}</div>}
     </div>
   );
 }

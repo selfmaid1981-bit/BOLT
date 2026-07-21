@@ -24,13 +24,6 @@ const supabaseClient = hasSupabaseConfig
 
 export const supabase = supabaseClient;
 export const isSupabaseConfigured = hasSupabaseConfig;
-export const supabase = supabaseUrl && supabaseAnonKey
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
-
-if (!supabase) {
-  console.warn('Supabase environment variables are missing. Falling back to a mock submission handler.');
-}
 
 export interface QuoteRequest {
   id?: string;
@@ -55,17 +48,6 @@ export async function submitQuoteRequest(quoteData: QuoteRequest) {
   }
 
   const { data, error } = await supabaseClient
-  if (!supabase) {
-    return {
-      ...quoteData,
-      id: crypto.randomUUID(),
-      status: 'pending',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    } satisfies QuoteRequest;
-  }
-
-  const { data, error } = await supabase
     .from('quote_requests')
     .insert([quoteData])
     .select()
