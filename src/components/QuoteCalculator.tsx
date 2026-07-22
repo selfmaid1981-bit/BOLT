@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { Calculator, Home, Building2, Key, Sparkles, Package, GraduationCap } from 'lucide-react';
-import { submitQuoteRequest } from '../lib/supabase';
+import {
+  SupabaseConfigurationError,
+  isSupabaseConfigured,
+  missingSupabaseConfigKeys,
+  submitQuoteRequest,
+} from '../lib/supabase';
 
 interface QuoteFormData {
   serviceType: string;
@@ -61,6 +66,11 @@ export default function QuoteCalculator() {
   const [showQuote, setShowQuote] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const isSupabaseAvailable = isSupabaseConfigured;
+  const contactPhoneNumber = '(123) 456-7890';
+  const contactPhoneHref = 'tel:+1234567890';
+  const contactEmailAddress = 'hello@selfmaid.com';
+  const contactEmailHref = 'mailto:hello@selfmaid.com';
 
   const calculatePrice = () => {
     if (!formData.serviceType || !formData.propertySize || !formData.frequency) {
@@ -105,6 +115,8 @@ export default function QuoteCalculator() {
     return Math.round(basePrice);
   };
 
+  const missingConfigList = missingSupabaseConfigKeys.join(', ');
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -127,7 +139,13 @@ export default function QuoteCalculator() {
       setShowQuote(true);
     } catch (error) {
       console.error('Error submitting quote:', error);
-      setSubmitError('Failed to submit quote request. Please try again.');
+      if (error instanceof SupabaseConfigurationError) {
+        setSubmitError(
+          `Online quote requests are currently unavailable. Please call ${contactPhoneNumber} or email ${contactEmailAddress} to book your service.`
+        );
+      } else {
+        setSubmitError('Failed to submit quote request. Please try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -363,11 +381,43 @@ export default function QuoteCalculator() {
             </div>
           )}
 
+          {/* Supabase Disabled Notice */}
+          {!isSupabaseAvailable && (
+            <div
+              className="bg-amber-50 border-2 border-amber-200 text-amber-900 p-4 rounded-lg space-y-2"
+              role="status"
+              aria-live="polite"
+            >
+              <p className="font-semibold">
+                Online quote requests are temporarily unavailable.
+              </p>
+              <p className="text-sm">
+                {missingConfigList
+                  ? `Our booking system is waiting for the following configuration: ${missingConfigList}.`
+                  : 'Our booking system is currently offline.'}
+              </p>
+              <div className="flex flex-col gap-1 text-sm">
+                <a href={contactPhoneHref} className="underline font-semibold text-amber-900">
+                  Call us at {contactPhoneNumber}
+                </a>
+                <a href={contactEmailHref} className="underline font-semibold text-amber-900">
+                  Email {contactEmailAddress}
+                </a>
+              </div>
+            </div>
+          )}
+
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               type="submit"
-              disabled={!formData.serviceType || !formData.propertySize || !formData.frequency || isSubmitting}
+              disabled={
+                !formData.serviceType ||
+                !formData.propertySize ||
+                !formData.frequency ||
+                isSubmitting ||
+                !isSupabaseAvailable
+              }
               className="flex-1 bg-emerald-600 text-white px-8 py-4 rounded-lg hover:bg-emerald-700 transition-all font-semibold text-lg shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:shadow-emerald-600/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-emerald-600"
             >
               {isSubmitting ? 'Submitting...' : 'Request Quote'}

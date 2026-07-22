@@ -1,13 +1,36 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
+export class SupabaseConfigurationError extends Error {
+  constructor() {
+    super('Missing Supabase environment variables');
+    this.name = 'SupabaseConfigurationError';
+  }
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL?.trim();
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
+
+const missingConfigKeys = [
+  !supabaseUrl && 'VITE_SUPABASE_URL',
+  !supabaseAnonKey && 'VITE_SUPABASE_ANON_KEY',
+].filter(Boolean) as string[];
+
+const hasSupabaseConfig = missingConfigKeys.length === 0;
+
+if (!hasSupabaseConfig) {
+  const readableList = missingConfigKeys.join(' & ');
+  console.warn(
+    `Supabase environment variables are not configured (${readableList}). Quote requests will not be submitted until these values are provided.`
+  );
+}
+
+const supabaseClient = hasSupabaseConfig
+  ? createClient(supabaseUrl!, supabaseAnonKey!)
+  : null;
+
+export const supabase = supabaseClient;
+export const isSupabaseConfigured = hasSupabaseConfig;
+export const missingSupabaseConfigKeys = missingConfigKeys;
 
 export interface QuoteRequest {
   id?: string;
@@ -27,7 +50,11 @@ export interface QuoteRequest {
 }
 
 export async function submitQuoteRequest(quoteData: QuoteRequest) {
-  const { data, error } = await supabase
+  if (!supabaseClient) {
+    throw new SupabaseConfigurationError();
+  }
+
+  const { data, error } = await supabaseClient
     .from('quote_requests')
     .insert([quoteData])
     .select()
