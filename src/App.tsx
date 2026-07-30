@@ -1,181 +1,92 @@
 import { useMemo, useState } from 'react';
 import {
-  ArrowRight,
-  BarChart3,
-  Bell,
-  Bot,
-  BrainCircuit,
-  Building2,
-  ChevronDown,
-  HelpCircle,
-  FileText,
-  FolderKanban,
-  LayoutDashboard,
-  Lightbulb,
-  Megaphone,
-  Menu,
-  MessageSquareText,
-  MoreHorizontal,
-  Plus,
-  Search,
-  Settings,
-  Sparkles,
-  Target,
-  Users,
-  Wand2,
-  X,
-  Zap,
+  ArrowRight, BarChart3, Check, ChevronDown, CircleDollarSign, Compass,
+  Flame, LayoutDashboard, Menu, PackageOpen, Play, Search, Settings,
+  Sparkles, Target, TrendingUp, Users, Video, X, Zap,
 } from 'lucide-react';
 
-const brains = [
-  { name: 'Marketing Brain', description: 'Campaigns, content & growth', icon: Megaphone, color: 'violet', activity: '12 min ago' },
-  { name: 'Sales Brain', description: 'Proposals, scripts & follow-up', icon: Target, color: 'blue', activity: '1 hr ago' },
-  { name: 'Operations Brain', description: 'SOPs, systems & quality', icon: Settings, color: 'amber', activity: 'Yesterday' },
-  { name: 'Training Brain', description: 'Onboarding & team development', icon: Users, color: 'emerald', activity: '2 days ago' },
+const niches = [
+  { emoji: '✨', name: 'Beauty & skincare', rate: '12–25%', demand: 'Very high' },
+  { emoji: '💪', name: 'Fitness & wellness', rate: '10–20%', demand: 'High' },
+  { emoji: '🏠', name: 'Home & lifestyle', rate: '8–18%', demand: 'High' },
 ];
 
-const campaigns = [
-  { title: 'Summer Deep Clean', status: 'Generating', meta: '24 assets • Self-Maid', progress: 68, color: '#7457e8' },
-  { title: 'Student Turnover 2026', status: 'Draft', meta: '12 assets • Self-Maid', progress: 34, color: '#dc9e32' },
-  { title: 'Q3 Brand Awareness', status: 'Live', meta: '36 assets • PlayHard', progress: 100, color: '#23966c' },
+const steps = [
+  { title: 'Pick your profitable niche', detail: 'Choose one audience and one problem you can speak about naturally.', time: '15 min' },
+  { title: 'Join 3 affiliate programs', detail: 'Start with products you already use and can demonstrate honestly.', time: '30 min' },
+  { title: 'Film your first 3 videos', detail: 'Use the hook → proof → payoff structure. Your phone is enough.', time: '60 min' },
+  { title: 'Publish & track every link', detail: 'Post consistently, disclose clearly, and double down on what converts.', time: 'Daily' },
 ];
 
 function App() {
-  const [business, setBusiness] = useState('Self-Maid');
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [prompt, setPrompt] = useState('');
-  const [notice, setNotice] = useState('');
-  const today = useMemo(() => new Intl.DateTimeFormat('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date()), []);
+  const [completed, setCompleted] = useState<number[]>([0]);
+  const [goal, setGoal] = useState(5000);
+  const [commission, setCommission] = useState(20);
+  const [price, setPrice] = useState(60);
+  const [started, setStarted] = useState(false);
 
-  const runAction = (message: string) => {
-    setNotice(message);
-    window.setTimeout(() => setNotice(''), 2600);
-  };
+  const math = useMemo(() => {
+    const earned = price * (commission / 100);
+    return { earned, sales: Math.ceil(goal / Math.max(earned, 1)), daily: Math.ceil(goal / Math.max(earned, 1) / 30) };
+  }, [goal, commission, price]);
+
+  const toggleStep = (index: number) => setCompleted(current =>
+    current.includes(index) ? current.filter(item => item !== index) : [...current, index]
+  );
 
   return (
     <div className="app-shell">
       <aside className={`sidebar ${mobileOpen ? 'open' : ''}`}>
-        <div className="brand">
-          <div className="brand-mark"><Sparkles size={20} /></div>
-          <span>CommonGround<span>AI</span></span>
-          <button className="mobile-close" onClick={() => setMobileOpen(false)} aria-label="Close menu"><X size={20} /></button>
-        </div>
-
-        <button className="business-switcher" onClick={() => setBusiness(business === 'Self-Maid' ? 'PlayHard' : 'Self-Maid')}>
-          <span className="business-avatar">SM</span>
-          <span><small>WORKSPACE</small><strong>{business}</strong></span>
-          <ChevronDown size={16} />
-        </button>
-
-        <nav className="side-nav">
-          <p>OVERVIEW</p>
-          <a className="active" href="#dashboard"><LayoutDashboard /> Dashboard</a>
-          <a href="#activity"><Zap /> Activity</a>
-          <p>AI WORKSPACE</p>
-          <a href="#brains"><BrainCircuit /> AI Brains <span className="nav-count">5</span></a>
-          <a href="#knowledge"><FolderKanban /> Knowledge Base</a>
-          <a href="#prompts"><MessageSquareText /> Prompt Library</a>
-          <p>PRODUCTION</p>
-          <a href="#campaigns"><Megaphone /> Campaigns</a>
-          <a href="#assets"><FileText /> Asset Library</a>
+        <div className="brand"><span className="brand-mark"><TrendingUp /></span><strong>Creator<span>Flow</span></strong><button onClick={() => setMobileOpen(false)} aria-label="Close navigation"><X /></button></div>
+        <nav>
+          <small>WORKSPACE</small>
+          <a className="active" href="#start"><LayoutDashboard /> Overview</a>
+          <a href="#roadmap"><Compass /> My roadmap <b>4</b></a>
+          <a href="#calculator"><Target /> Income goal</a>
+          <small>GROW</small>
+          <a href="#niches"><PackageOpen /> Offer finder</a>
+          <a href="#scripts"><Video /> Script studio</a>
           <a href="#analytics"><BarChart3 /> Analytics</a>
+          <a href="#community"><Users /> Community</a>
         </nav>
-
-        <div className="sidebar-bottom">
-          <a href="#help"><HelpCircle /> Help & resources</a>
-          <a href="#settings"><Settings /> Settings</a>
-          <div className="profile-card">
-            <span className="profile-avatar">DM</span>
-            <span><strong>De'Andre Moore</strong><small>Administrator</small></span>
-            <MoreHorizontal size={18} />
-          </div>
-        </div>
+        <div className="side-tip"><span><Sparkles /></span><strong>Creator tip</strong><p>Specific proof beats perfect production. Show the product solving a real problem.</p></div>
+        <a className="settings" href="#settings"><Settings /> Settings</a>
+        <div className="profile"><span>AM</span><div><strong>Alex Morgan</strong><small>Starter plan</small></div><ChevronDown /></div>
       </aside>
 
       <main>
-        <header className="topbar">
-          <button className="menu-btn" onClick={() => setMobileOpen(true)} aria-label="Open menu"><Menu /></button>
-          <div className="search"><Search size={18} /><input aria-label="Search" placeholder="Search anything..." /><kbd>⌘ K</kbd></div>
-          <div className="top-actions">
-            <button className="icon-button" aria-label="Notifications"><Bell size={20} /><i /></button>
-            <button className="create-button" onClick={() => runAction('New workspace item ready to create')}><Plus size={18} /> Create new <ChevronDown size={15} /></button>
-          </div>
+        <header>
+          <button className="menu" onClick={() => setMobileOpen(true)} aria-label="Open navigation"><Menu /></button>
+          <div className="search"><Search /><input aria-label="Search" placeholder="Search playbooks, offers, scripts..." /></div>
+          <div className="streak"><Flame /> 3 day streak</div>
+          <button className="avatar">AM</button>
         </header>
 
-        <div className="content" id="dashboard">
-          <section className="welcome-row">
-            <div>
-              <p>{today}</p>
-              <h1>Good morning, De'Andre <span>👋🏾</span></h1>
-              <h2>Your AI workforce is ready. What are we building today?</h2>
-            </div>
-            <div className="system-status"><span /> All systems operational</div>
+        <div className="content" id="start">
+          <section className="hero">
+            <div className="hero-copy"><span className="eyebrow"><Sparkles /> YOUR CREATOR ERA STARTS NOW</span><h1>Turn your content into<br/><em>real income.</em></h1><p>Build a profitable UGC affiliate business with a clear plan—no huge following, fancy gear, or guesswork required.</p><div className="hero-actions"><button onClick={() => { setStarted(true); document.querySelector('#roadmap')?.scrollIntoView(); }}>Start my game plan <ArrowRight /></button><a href="#scripts"><Play /> See how it works</a></div><div className="proof"><div className="faces"><i>JD</i><i>SK</i><i>ML</i></div><span><b>12,400+ creators</b><small>building income this month</small></span></div></div>
+            <div className="earnings-card"><div className="earnings-top"><span><CircleDollarSign /></span><small>THIS MONTH</small><b>+32.8%</b></div><h3>$2,847.60</h3><p>Affiliate earnings</p><div className="chart"><i style={{height:'25%'}}/><i style={{height:'38%'}}/><i style={{height:'31%'}}/><i style={{height:'56%'}}/><i style={{height:'48%'}}/><i style={{height:'72%'}}/><i className="hot" style={{height:'88%'}}/></div><div className="sale"><span><Check /></span><div><b>New commission!</b><small>Glow Serum · 2 minutes ago</small></div><strong>+$18.40</strong></div></div>
           </section>
 
-          <section className="command-card">
-            <div className="command-icon"><Wand2 /></div>
-            <div className="command-copy">
-              <strong>Ask your AI workforce</strong>
-              <span>Turn an idea into a complete business deliverable.</span>
-            </div>
-            <div className="prompt-box">
-              <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="e.g. Build a summer deep cleaning campaign for busy families in Auburn..." />
-              <button onClick={() => { if (prompt.trim()) { runAction('Your AI workforce is building it now'); setPrompt(''); } }} aria-label="Submit prompt"><ArrowRight /></button>
-            </div>
-            <div className="prompt-suggestions">
-              <span>Try asking:</span>
-              {['Create a campaign', 'Write a proposal', 'Build an SOP'].map(item => <button key={item} onClick={() => setPrompt(item)}>{item}</button>)}
+          {started && <div className="success"><Check /> Your plan is active—complete the next step below to keep your momentum.</div>}
+
+          <section className="roadmap" id="roadmap">
+            <div className="section-title"><div><span>YOUR 4-STEP LAUNCH PLAN</span><h2>From zero to first commission</h2><p>Simple, focused actions designed to get you earning—not endlessly learning.</p></div><strong>{completed.length}/4 complete</strong></div>
+            <div className="steps">
+              {steps.map((step, index) => <button className={completed.includes(index) ? 'done' : ''} onClick={() => toggleStep(index)} key={step.title}><span className="step-number">{completed.includes(index) ? <Check /> : index + 1}</span><div><small>STEP {index + 1} · {step.time}</small><h3>{step.title}</h3><p>{step.detail}</p></div><ArrowRight className="step-arrow" /></button>)}
             </div>
           </section>
 
-          <section id="brains">
-            <div className="section-heading">
-              <div><h3>Your AI Brains</h3><p>Specialized intelligence, trained on your business.</p></div>
-              <button onClick={() => runAction('Opening all AI Brains')}>View all brains <ArrowRight size={16} /></button>
-            </div>
-            <div className="brain-grid">
-              {brains.map(({ name, description, icon: Icon, color, activity }) => (
-                <article className="brain-card" key={name}>
-                  <div className={`brain-icon ${color}`}><Icon /></div>
-                  <button className="more" aria-label={`More options for ${name}`}><MoreHorizontal /></button>
-                  <h4>{name}</h4><p>{description}</p>
-                  <div className="brain-footer"><span><i /> Ready</span><small>{activity}</small><button onClick={() => runAction(`${name} is ready for your prompt`)}><ArrowRight /></button></div>
-                </article>
-              ))}
-            </div>
-          </section>
-
-          <div className="lower-grid">
-            <section className="campaign-panel" id="campaigns">
-              <div className="section-heading"><div><h3>Active Campaigns</h3><p>Production moving across your businesses.</p></div><button>View all <ArrowRight size={16} /></button></div>
-              <div className="campaign-list">
-                {campaigns.map(c => <div className="campaign" key={c.title}>
-                  <div className="campaign-symbol" style={{ background: `${c.color}16`, color: c.color }}><Megaphone /></div>
-                  <div className="campaign-info"><strong>{c.title}</strong><span>{c.meta}</span><div className="progress"><i style={{ width: `${c.progress}%`, background: c.color }} /></div></div>
-                  <span className={`status ${c.status.toLowerCase()}`}>{c.status === 'Generating' && <i />}{c.status}</span>
-                  <button className="more"><MoreHorizontal /></button>
-                </div>)}
-              </div>
-            </section>
-
-            <aside className="insight-card">
-              <div className="insight-top"><span><Lightbulb /></span><small>AI INSIGHT</small></div>
-              <h3>Your summer campaign is outperforming</h3>
-              <p>“Summer Deep Clean” is seeing <strong>32% higher engagement</strong> than your campaign average.</p>
-              <button onClick={() => runAction('Opening campaign insights')}>View insight <ArrowRight /></button>
-              <div className="insight-orb"><Bot /></div>
-            </aside>
+          <div className="two-col">
+            <section className="calculator" id="calculator"><span className="eyebrow">THE INCOME MATH</span><h2>Make the goal feel doable.</h2><p>See exactly how many sales stand between you and your monthly target.</p><label>Monthly income goal <output>${goal.toLocaleString()}</output><input type="range" min="500" max="15000" step="500" value={goal} onChange={e => setGoal(Number(e.target.value))}/></label><div className="field-row"><label>Product price<input type="number" min="1" value={price} onChange={e => setPrice(Number(e.target.value))}/></label><label>Commission<input type="number" min="1" max="100" value={commission} onChange={e => setCommission(Number(e.target.value))}/><span>%</span></label></div><div className="result"><div><small>EARN PER SALE</small><b>${math.earned.toFixed(2)}</b></div><div><small>SALES / MONTH</small><b>{math.sales}</b></div><div><small>SALES / DAY</small><b>{math.daily}</b></div></div><small className="disclaimer">Estimates are planning targets, not income guarantees. Results depend on your offer, audience, content, and consistency.</small></section>
+            <section className="niches" id="niches"><span className="eyebrow">START WITH DEMAND</span><h2>Beginner-friendly niches</h2><p>Look for repeat purchases, visible results, and products you genuinely trust.</p>{niches.map((niche) => <article key={niche.name}><span>{niche.emoji}</span><div><h3>{niche.name}</h3><small>{niche.rate} typical commission</small></div><b>{niche.demand}</b><button aria-label={`Explore ${niche.name}`}><ArrowRight /></button></article>)}<button className="explore">Explore all offers <ArrowRight /></button></section>
           </div>
 
-          <section className="stats-grid" id="analytics">
-            <article><span className="stat-icon purple"><FileText /></span><div><small>Knowledge items</small><strong>248</strong><em>+18 this month</em></div></article>
-            <article><span className="stat-icon blue"><MessageSquareText /></span><div><small>AI generations</small><strong>1,284</strong><em>+24% vs last month</em></div></article>
-            <article><span className="stat-icon green"><Building2 /></span><div><small>Businesses connected</small><strong>3</strong><em>All active</em></div></article>
-          </section>
+          <section className="cta" id="scripts"><span><Zap /></span><div><small>READY TO CREATE?</small><h2>Your first converting script is 60 seconds away.</h2><p>Choose a product, answer three questions, and get a natural script built around your voice.</p></div><button>Build my first script <ArrowRight /></button></section>
         </div>
       </main>
-      {mobileOpen && <button className="scrim" aria-label="Close menu" onClick={() => setMobileOpen(false)} />}
-      {notice && <div className="toast"><Sparkles size={17} />{notice}</div>}
+      {mobileOpen && <button className="scrim" onClick={() => setMobileOpen(false)} aria-label="Close navigation overlay" />}
     </div>
   );
 }
