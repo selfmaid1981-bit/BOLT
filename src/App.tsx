@@ -18,6 +18,17 @@ const steps = [
   { title: 'Publish & track every link', detail: 'Post consistently, disclose clearly, and double down on what converts.', time: 'Daily' },
 ];
 
+function buildScript(product: string, audience: string, proof: string) {
+  const p = product.trim() || 'this product';
+  const a = audience.trim() || 'people who care about results';
+  const r = proof.trim() || 'a clear before/after';
+  return {
+    hook: `If you are ${a}, stop scrolling — ${p} is the shortcut I actually use.`,
+    proof: `I tested it myself. The proof point: ${r}. No fluff, just what changed.`,
+    payoff: `Want the same path? Link is in my bio — grab ${p} and start today. Disclosure: affiliate link.`,
+  };
+}
+
 function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [completed, setCompleted] = useState<number[]>([0]);
@@ -25,11 +36,18 @@ function App() {
   const [commission, setCommission] = useState(20);
   const [price, setPrice] = useState(60);
   const [started, setStarted] = useState(false);
+  const [scriptOpen, setScriptOpen] = useState(false);
+  const [product, setProduct] = useState('Glow Serum');
+  const [audience, setAudience] = useState('busy creators building side income');
+  const [proof, setProof] = useState('noticeably clearer skin in two weeks');
+  const [scriptReady, setScriptReady] = useState(false);
 
   const math = useMemo(() => {
     const earned = price * (commission / 100);
     return { earned, sales: Math.ceil(goal / Math.max(earned, 1)), daily: Math.ceil(goal / Math.max(earned, 1) / 30) };
   }, [goal, commission, price]);
+
+  const script = useMemo(() => buildScript(product, audience, proof), [product, audience, proof]);
 
   const toggleStep = (index: number) => setCompleted(current =>
     current.includes(index) ? current.filter(item => item !== index) : [...current, index]
@@ -52,21 +70,21 @@ function App() {
         </nav>
         <div className="side-tip"><span><Sparkles /></span><strong>Creator tip</strong><p>Specific proof beats perfect production. Show the product solving a real problem.</p></div>
         <a className="settings" href="#settings"><Settings /> Settings</a>
-        <div className="profile"><span>AM</span><div><strong>Alex Morgan</strong><small>Starter plan</small></div><ChevronDown /></div>
+        <div className="profile"><span>MC</span><div><strong>Michelle Corrigan</strong><small>Playhard · Self-Maid</small></div><ChevronDown /></div>
       </aside>
 
       <main>
         <header>
           <button className="menu" onClick={() => setMobileOpen(true)} aria-label="Open navigation"><Menu /></button>
           <div className="search"><Search /><input aria-label="Search" placeholder="Search playbooks, offers, scripts..." /></div>
-          <div className="streak"><Flame /> 3 day streak</div>
-          <button className="avatar">AM</button>
+          <div className="streak"><Flame /> Demo mode</div>
+          <button className="avatar" aria-label="Michelle Corrigan">MC</button>
         </header>
 
         <div className="content" id="start">
           <section className="hero">
-            <div className="hero-copy"><span className="eyebrow"><Sparkles /> YOUR CREATOR ERA STARTS NOW</span><h1>Turn your content into<br/><em>real income.</em></h1><p>Build a profitable UGC affiliate business with a clear plan—no huge following, fancy gear, or guesswork required.</p><div className="hero-actions"><button onClick={() => { setStarted(true); document.querySelector('#roadmap')?.scrollIntoView(); }}>Start my game plan <ArrowRight /></button><a href="#scripts"><Play /> See how it works</a></div><div className="proof"><div className="faces"><i>JD</i><i>SK</i><i>ML</i></div><span><b>12,400+ creators</b><small>building income this month</small></span></div></div>
-            <div className="earnings-card"><div className="earnings-top"><span><CircleDollarSign /></span><small>THIS MONTH</small><b>+32.8%</b></div><h3>$2,847.60</h3><p>Affiliate earnings</p><div className="chart"><i style={{height:'25%'}}/><i style={{height:'38%'}}/><i style={{height:'31%'}}/><i style={{height:'56%'}}/><i style={{height:'48%'}}/><i style={{height:'72%'}}/><i className="hot" style={{height:'88%'}}/></div><div className="sale"><span><Check /></span><div><b>New commission!</b><small>Glow Serum · 2 minutes ago</small></div><strong>+$18.40</strong></div></div>
+            <div className="hero-copy"><span className="eyebrow"><Sparkles /> YOUR CREATOR ERA STARTS NOW</span><h1>Turn your content into<br/><em>real income.</em></h1><p>Build a profitable UGC affiliate business with a clear plan—no huge following, fancy gear, or guesswork required.</p><div className="hero-actions"><button onClick={() => { setStarted(true); document.querySelector('#roadmap')?.scrollIntoView({ behavior: 'smooth' }); }}>Start my game plan <ArrowRight /></button><a href="#scripts"><Play /> See how it works</a></div><div className="proof"><div className="faces"><i>MC</i><i>PH</i><i>SM</i></div><span><b>Demo preview</b><small>sample metrics for walkthroughs</small></span></div></div>
+            <div className="earnings-card"><div className="earnings-top"><span><CircleDollarSign /></span><small>THIS MONTH · DEMO DATA</small><b>+32.8%</b></div><h3>$2,847.60</h3><p>Sample affiliate earnings (not live)</p><div className="chart"><i style={{height:'25%'}}/><i style={{height:'38%'}}/><i style={{height:'31%'}}/><i style={{height:'56%'}}/><i style={{height:'48%'}}/><i style={{height:'72%'}}/><i className="hot" style={{height:'88%'}}/></div><div className="sale"><span><Check /></span><div><b>Example commission</b><small>Glow Serum · sample event</small></div><strong>+$18.40</strong></div></div>
           </section>
 
           {started && <div className="success"><Check /> Your plan is active—complete the next step below to keep your momentum.</div>}
@@ -83,9 +101,40 @@ function App() {
             <section className="niches" id="niches"><span className="eyebrow">START WITH DEMAND</span><h2>Beginner-friendly niches</h2><p>Look for repeat purchases, visible results, and products you genuinely trust.</p>{niches.map((niche) => <article key={niche.name}><span>{niche.emoji}</span><div><h3>{niche.name}</h3><small>{niche.rate} typical commission</small></div><b>{niche.demand}</b><button aria-label={`Explore ${niche.name}`}><ArrowRight /></button></article>)}<button className="explore">Explore all offers <ArrowRight /></button></section>
           </div>
 
-          <section className="cta" id="scripts"><span><Zap /></span><div><small>READY TO CREATE?</small><h2>Your first converting script is 60 seconds away.</h2><p>Choose a product, answer three questions, and get a natural script built around your voice.</p></div><button>Build my first script <ArrowRight /></button></section>
+          <section className="cta" id="scripts"><span><Zap /></span><div><small>READY TO CREATE?</small><h2>Your first converting script is 60 seconds away.</h2><p>Choose a product, answer three questions, and get a natural script built around your voice.</p></div><button type="button" onClick={() => { setScriptOpen(true); setScriptReady(false); }}>{'Build my first script '}<ArrowRight /></button></section>
+
+          <footer className="built-by" id="settings">
+            <p><strong>Built by Michelle Corrigan</strong> · Playhard Advertising · Self-Maid</p>
+            <a href="https://github.com/selfmaid1981-bit/BOLT" target="_blank" rel="noreferrer">github.com/selfmaid1981-bit/BOLT</a>
+          </footer>
         </div>
       </main>
+
+      {scriptOpen && (
+        <div className="script-modal" role="dialog" aria-modal="true" aria-labelledby="script-title">
+          <div className="script-panel">
+            <header>
+              <h2 id="script-title">Script studio</h2>
+              <button type="button" aria-label="Close script studio" onClick={() => setScriptOpen(false)}><X /></button>
+            </header>
+            <div className="script-fields">
+              <label>Product<input value={product} onChange={e => setProduct(e.target.value)} /></label>
+              <label>Audience<input value={audience} onChange={e => setAudience(e.target.value)} /></label>
+              <label>Proof point<input value={proof} onChange={e => setProof(e.target.value)} /></label>
+            </div>
+            <button type="button" className="generate" onClick={() => setScriptReady(true)}>Generate hook → proof → payoff</button>
+            {scriptReady && (
+              <ol className="script-out">
+                <li><small>HOOK</small><p>{script.hook}</p></li>
+                <li><small>PROOF</small><p>{script.proof}</p></li>
+                <li><small>PAYOFF</small><p>{script.payoff}</p></li>
+              </ol>
+            )}
+          </div>
+          <button type="button" className="scrim" aria-label="Close" onClick={() => setScriptOpen(false)} />
+        </div>
+      )}
+
       {mobileOpen && <button className="scrim" onClick={() => setMobileOpen(false)} aria-label="Close navigation overlay" />}
     </div>
   );
