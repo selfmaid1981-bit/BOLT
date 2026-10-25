@@ -10,27 +10,17 @@ export class SupabaseConfigurationError extends Error {
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-const hasSupabaseConfig = Boolean(supabaseUrl && supabaseAnonKey);
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
-if (!hasSupabaseConfig) {
+if (!isSupabaseConfigured) {
   console.warn(
     'Supabase environment variables are not configured. Quote requests will not be submitted.'
   );
 }
 
-const supabaseClient = hasSupabaseConfig
+export const supabase = isSupabaseConfigured
   ? createClient(supabaseUrl, supabaseAnonKey)
   : null;
-
-export const supabase = supabaseClient;
-export const isSupabaseConfigured = hasSupabaseConfig;
-export const supabase = supabaseUrl && supabaseAnonKey
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
-
-if (!supabase) {
-  console.warn('Supabase environment variables are missing. Falling back to a mock submission handler.');
-}
 
 export interface QuoteRequest {
   id?: string;
@@ -50,19 +40,8 @@ export interface QuoteRequest {
 }
 
 export async function submitQuoteRequest(quoteData: QuoteRequest) {
-  if (!supabaseClient) {
-    throw new SupabaseConfigurationError();
-  }
-
-  const { data, error } = await supabaseClient
   if (!supabase) {
-    return {
-      ...quoteData,
-      id: crypto.randomUUID(),
-      status: 'pending',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    } satisfies QuoteRequest;
+    throw new SupabaseConfigurationError();
   }
 
   const { data, error } = await supabase
